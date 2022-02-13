@@ -1,0 +1,112 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "dc04vmvc04"
+    vcenter_user: "svc_aut_bld@sfdc"
+    vcenter_pass: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    cluster_name: "DC04-VC04-Cluster14"
+    ProvisioningNetworkLabel: MGMT-SVCS_198
+    #vm_name: "SDO-Automation-Template-15sp1_v1"
+    vm_name: "SDO-Automation-Template-12sp3"
+  tasks:
+    # Deploys a new VM named 'NewVM' in specific datacenter/cluster, with network mapping taken from variable and using ova template from an absolute path
+  - vmware_deploy_ovf:
+      hostname: '{{ vcenter_server }}'
+      username: '{{ vcenter_user }}'
+      password: '{{ vcenter_pass }}'
+      datacenter: "{{ datacenter_name }}"
+      cluster: "{{ cluster_name }}"
+      datastore: "DC04_VC04_SAS2SSD_Storage_Cluster14"
+      #name: SDO-Automation-Template-15sp1_v1
+      name: SDO-Automation-Template-12sp3
+      #networks: MGMT-SVCS_198
+      networks: "{u'nat':u'{{ ProvisioningNetworkLabel }}'}"
+      validate_certs: no
+      power_on: no
+      wait: no
+      #ovf: /build/Images/Cloud-imagebuild/result_backup/sles12sp5-app/latest/sles12sp5.ova
+      #ovf: /build/Images/Cloud-imagebuild/result_backup/sles15sp1-app/latest/sles15sp1.ova
+      ovf: /build/Images/Cloud-imagebuild/result_backup/sles12sp3-app/latest/sles12sp3.ova
+    delegate_to: localhost
+#-----
+#Add cdrom to the template to mount vmtools
+#
+  - vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      datacenter: "{{ datacenter_name }}"
+      cluster: "{{ cluster_name }}"
+      datastore: "DC04_VC04_SAS2SSD_Storage_Cluster14"
+      name: "{{ vm_name }}"
+      validate_certs: no
+      #sles15sp1-SDO-automation-2020-04-09-15-33-12
+      #is_template: yes
+      networks: 
+      - name: MGMT-SVCS_198
+        type: static
+        #device_type: vmxnet3
+        ip: 10.4.198.36
+        netmask: 255.255.255.0
+        gateway: 10.4.198.1
+        start_connected: True
+        allow_guest_control: True
+      #- vlan: 198
+      #  type: static
+      customization:
+        hostname: SDO-Automation-Template-12sp3
+        domain: phx.sf.priv
+        dns_servers:
+          - 10.4.196.10
+          - 10.4.196.46
+        dns_suffix:
+          - phx.od.sap.biz
+          - sf.priv
+      cdrom:
+        type: iso
+        iso_path: "[]/vmimages/tools-isoimages/linux.iso"
+        #controller_type: ide
+        #controller_number: 0
+        #unit_number: 0
+      wait_for_customization: yes
+      wait_for_ip_address: yes
+    delegate_to: localhost
+#-----
+#
+#  - vmware_vm_shell:
+#      hostname: "{{ vcenter_server }}"
+#      username: "{{ vcenter_user }}"
+#      password: "{{ vcenter_pass }}"
+#      validate_certs: no
+#      datacenter: "{{ datacenter_name }}"
+#      vm_id: "{{ vm_name }}"
+#      vm_username: opsadmin
+#      vm_password: Platf0rm20!6
+#      vm_shell: "/usr/bin/hostnamectl"
+#      vm_shell_args: "set-hostname new_hostname > /tmp/$$.txt 2>&1"
+#    delegate_to: localhost
+#-----
+# Power off the VM
+#
+#  - vmware_guest_powerstate:
+#      hostname: "{{ vcenter_server }}"
+#      username: "{{ vcenter_user }}"
+#      password: "{{ vcenter_pass }}"
+#      validate_certs: no
+#      name: "{{ vm_name }}"
+#      state: powered-off
+#    delegate_to: localhost
+#-----
+# Convert the VM to template
+#
+#  - vmware_guest:
+#      hostname: "{{ vcenter_server }}"
+#      username: "{{ vcenter_user }}"
+#      password: "{{ vcenter_pass }}"
+#      validate_certs: no
+#      name: "{{ vm_name }}"
+#      is_template: yes
+#      annotation: "Created via Ansible Script - Manjesh"
+#    delegate_to: localhost
+#-----

@@ -1,0 +1,33 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "dc04vmvc04"
+    vcenter_user: "svc_aut_bld@sfdc"
+    vcenter_pass: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    cluster_name: "DC04-VC04-Cluster14"
+    vm_name: "SDO-Clone-frm-Template"
+  tasks:
+  - vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: False
+      name: SDO-Clone-frm-Template
+      template: SDO-Automation-Template
+      datacenter: "{{ datacenter_name }}"
+      folder: /{{ datacenter_name }}/vm
+      cluster: "{{ cluster_name }}"
+      datastore: "DC04_VC04_SAS2SSD_Storage_Cluster14"
+      networks:
+      - name: MGMT-SVCS_198
+        ip: 10.4.198.35
+        netmask: 255.255.255.0
+        gateway: 10.4.198.1
+        type: static
+      state: poweredoff
+      #state: poweredon
+      wait_for_customization: yes
+      wait_for_ip_address: yes
+    delegate_to: localhost

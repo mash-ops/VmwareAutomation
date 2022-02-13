@@ -1,0 +1,22 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "dc04vmvc04"
+    vcenter_user: "svc_aut_bld@sfdc"
+    vcenter_pass: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    cluster_name: "DC04-VC04-Cluster14"
+  tasks:
+  - name: Copy file to datastore when datacenter is inside folder called devel
+    vsphere_copy:
+      hostname: '{{ vcenter_server }}'
+      username: '{{ vcenter_user }}'
+      password: '{{ vcenter_pass }}'
+      src: /build/Images/Cloud-imagebuild/result_backup/sles12sp5-app-2020-04-02-23-58-50/sles12sp5.ova
+      datacenter: "{{ datacenter_name }}"
+      #datacenter: devel/DC1
+      datastore: DC04_VC04_C14_12
+      path: sles12sp5-test-ova
+      #path: c824774e-91b07696/
+      validate_certs: no
+    delegate_to: localhost

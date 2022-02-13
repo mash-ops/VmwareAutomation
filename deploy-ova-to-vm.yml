@@ -1,0 +1,25 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "dc04vmvc04"
+    vcenter_user: "svc_aut_bld@sfdc"
+    vcenter_pass: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    cluster_name: "DC04-VC04-Cluster14"
+    ProvisioningNetworkLabel: MGMT-SVCS_198
+  tasks:
+    # Deploys a new VM named 'NewVM' in specific datacenter/cluster, with network mapping taken from variable and using ova template from an absolute path
+    - vmware_deploy_ovf:
+        hostname: '{{ vcenter_server }}'
+        username: '{{ vcenter_user }}'
+        password: '{{ vcenter_pass }}'
+        datacenter: "{{ datacenter_name }}"
+        cluster: "{{ cluster_name }}"
+        datastore: "DC04_VC04_SAS2SSD_Storage_Cluster14"
+        name: SDO-Automation-OVA-VM
+        #networks: MGMT-SVCS_198
+        networks: "{u'nat':u'{{ ProvisioningNetworkLabel }}'}"
+        validate_certs: no
+        power_on: no
+        ovf: /build/Images/Cloud-imagebuild/result_backup/sles12sp5-app/sles12sp5-app-2020-04-02-23-58-50/sles12sp5.ova
+      delegate_to: localhost

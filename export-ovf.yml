@@ -1,0 +1,25 @@
+# Dependency : community module to be available, community.vmware.vmware_export_ovf
+#
+# Issue: Exporting out OVF & VMDK from our vcenter is 2 hop process and manual,
+#        This is an attempt to cutdown the time spent in first exporting to win JH and then to buildbox
+#        This playbook will directly export to the buildbox /automation/manjesh/<vmname Dir>/
+#
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_hostname: "dc04vmvc04"
+    vcenter_username: "svc_aut_bld@sfdc"
+    vcenter_password: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    vm_name: "manjesh-2008r2"
+  tasks:
+  - community.vmware.vmware_export_ovf:
+      validate_certs: false
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      name: '{{ vm_name }}'
+      export_with_images: false
+      #export_dir: /path/to/ovf_template/
+      export_dir: /automation/manjesh/
+    delegate_to: localhost

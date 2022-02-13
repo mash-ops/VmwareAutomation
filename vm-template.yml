@@ -1,0 +1,53 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "dc04vmvc04"
+    vcenter_user: "svc_aut_bld@sfdc"
+    vcenter_pass: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    cluster_name: "DC04-VC04-Cluster14"
+    ProvisioningNetworkLabel: MGMT-SVCS_198
+    vm_name: "SDO-Automation-Template-12sp3_v1"
+  tasks:
+    # Deploys a new VM named 'NewVM' in specific datacenter/cluster, with network mapping taken from variable and using ova template from an absolute path
+  - vmware_deploy_ovf:
+      hostname: '{{ vcenter_server }}'
+      username: '{{ vcenter_user }}'
+      password: '{{ vcenter_pass }}'
+      datacenter: "{{ datacenter_name }}"
+      cluster: "{{ cluster_name }}"
+      datastore: "DC04_VC04_SAS2SSD_Storage_Cluster14"
+      name: SDO-Automation-Template-12sp3_v1
+      #networks: MGMT-SVCS_198
+      networks: "{u'nat':u'{{ ProvisioningNetworkLabel }}'}"
+      validate_certs: no
+      power_on: no
+      wait: no
+      #ovf: /build/Images/Cloud-imagebuild/result_backup/sles12sp5-app/latest/sles12sp5.ova
+      #ovf: /build/Images/Cloud-imagebuild/result_backup/sles15sp1-app/latest/sles15sp1.ova
+      ovf: /build/Images/Cloud-imagebuild/result_backup/sles12sp3-app/latest/sles12sp3.ova
+      #ovf: /build/Images/Cloud-imagebuild/result_backup/sles12sp4-app/latest/sles12sp4.ova
+    delegate_to: localhost
+#-----
+#  - vmware_guest_tools_upgrade:
+#      hostname: "{{ vcenter_server }}"
+#      username: "{{ vcenter_user }}"
+#      password: "{{ vcenter_pass }}"
+#      datacenter: "{{ datacenter_name }}"
+#      name: "{{ vm_name }}"
+#      #uuid: 421e4592-c069-924d-ce20-7e7533fab926
+#      validate_certs: no
+#    delegate_to: localhost
+#-----
+  - vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: no
+      name: "{{ vm_name }}"
+      #is_template: yes
+      #network:
+      #  device_type: vmxnet3
+        #start_connected: True
+      annotation: "Created via Ansible Script - Manjesh"
+    delegate_to: localhost

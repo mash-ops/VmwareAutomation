@@ -1,0 +1,65 @@
+---
+- name: vCenter VM Clone
+  hosts: localhost
+  vars:
+    vcenter_provider:
+      hostname: dc04vmvc04
+      username: svc_aut_bld@sfdc
+      password: 9Ym6+b$Hd
+      validate_certs: no
+      datacenter: DC04VC04
+      cluster: DC04-VC04-Cluster14
+      folder: /DC04VC04/vm
+    source_vm:
+      name: 'SDO-Automation-Template-12sp3_v1'
+      network_name: 'MGMT-SVCS_198'
+
+    new_hosts:
+      - hostname: SDO-Clone-frm-Template-12sp3
+        ip_addr: '10.4.198.36'
+        ip_netmask: '255.255.255.0'
+        ip_gateway: '10.4.198.1'
+        #ip_addr: "{{ ip_addr1 }}"
+        #ip_netmask: "{{ ip_netmask1 }}"
+        #ip_gateway: "{{ ip_gateway1 }}"
+
+  tasks:
+    - name: Create VM from Template
+      vmware_guest:
+        hostname: "{{ vcenter_provider.hostname }}"
+        username: "{{ vcenter_provider.username }}"
+        password: "{{ vcenter_provider.password }}"
+        datacenter: "{{ vcenter_provider.datacenter }}"
+        cluster: "{{ vcenter_provider.cluster }}"
+        datastore: "DC04_VC04_SAS2SSD_Storage_Cluster14"
+        validate_certs: "{{ vcenter_provider.validate_certs }}"
+        folder: "{{( vcenter_provider.folder | default ('/vm') )}}"
+        name: "{{ item.hostname }}"
+        state: "{{ item.state | default('poweredon') }}"
+        template: "{{ source_vm.name }}"
+        networks:
+          - name: "{{ source_vm.network_name }}"
+            type: static
+            device_type: vmxnet3
+            start_connected: True
+            ip: "{{ item.ip_addr }}"
+            netmask: "{{ item.ip_netmask }}"
+            gateway: "{{ item.ip_gateway }}"
+            dns_servers:
+            - 10.4.196.10
+            - 10.4.196.46
+
+        customization:
+          hostname: "{{ item.hostname }}"
+          dns_domain: phx.sf.priv
+          dns_suffix:
+          - phx.sf.priv
+          - phx.od.sap.biz
+          - sf.priv
+        annotation: "Created via Ansible Script - Manjesh"
+      with_items: "{{ new_hosts }}"
+      register: deploy
+
+    - name: Show Deploy
+      debug:
+        msg: "{{ deploy }}"

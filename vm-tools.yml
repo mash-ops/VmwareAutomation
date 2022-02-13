@@ -1,0 +1,21 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "dc04vmvc04"
+    vcenter_user: "svc_aut_bld@sfdc"
+    vcenter_pass: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    cluster_name: "DC04-VC04-Cluster14"
+    ProvisioningNetworkLabel: MGMT-SVCS_198
+    #vm_name: "SDO-Clone-frm-Template1"
+    vm_name: "SDO-Automation-Template-sp5"
+  tasks:
+  - vmware_guest_tools_upgrade:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      datacenter: "{{ datacenter_name }}"
+      name: "{{ vm_name }}"
+      #uuid: 421e4592-c069-924d-ce20-7e7533fab926
+      validate_certs: no
+    delegate_to: localhost

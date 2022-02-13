@@ -1,0 +1,12 @@
+- hosts: localhost
+  tasks:
+  - name: Gather vmware host facts from vCenter
+    vmware_host_facts:
+      hostname: dc04vmvc04 
+      username: svc_aut_bld@sfdc 
+      password: 9Ym6+b$Hd 
+      validate_certs: no
+      #esxi_hostname: "{{ esxi_hostname }}"
+    register: host_facts
+    delegate_to: localhost
+

@@ -1,0 +1,19 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "dc04vmvc04"
+    vcenter_user: "svc_aut_bld@sfdc"
+    vcenter_pass: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    cluster_name: "DC04-VC04-Cluster14"
+    vm_name: "SDO-Automation-Template"
+  tasks:
+  - name: Rename a virtual machine (requires the virtual machine's uuid)
+    vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: no
+      name: "{{ vm_name }}"
+      is_template: yes
+    delegate_to: localhost

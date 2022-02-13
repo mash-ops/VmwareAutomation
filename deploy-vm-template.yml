@@ -1,0 +1,20 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "dc04vmvc04"
+    vcenter_user: "svc_aut_bld@sfdc"
+    vcenter_pass: "9Ym6+b$Hd"
+    datacenter_name: "DC04VC04"
+    cluster_name: "DC04-VC04-Cluster14"
+    vm_name: "SDO-Automation-OVA-VM"
+  tasks:
+  - vmware_export_ovf:
+      validate_certs: false
+      hostname: '{{ vcenter_server }}'
+      username: '{{ vcenter_user }}'
+      password: '{{ vcenter_pass }}'
+      name: '{{ vm_name }}'
+      export_with_images: true
+      export_dir: DC04_TEMPLATE_01
+    delegate_to: localhost
+
