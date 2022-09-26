@@ -2,8 +2,8 @@ plugin: vmware_vm_inventory
 strict: False
 hostname: 10.4.87.34
 #username: administrator@vsphere.local
-username: svc_aut_bld@sfdc
-password: 9Ym6+b$Hd
+username: your_vcenter_user
+password: your_vcenter_passwd
 validate_certs: False
 with_tags: False
 #properties:

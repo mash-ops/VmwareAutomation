@@ -2,8 +2,8 @@
   gather_facts: no
   vars:
     vcenter_server: "dc04vmvc04"
-    vcenter_user: "svc_aut_bld@sfdc"
-    vcenter_pass: "9Ym6+b$Hd"
+    vcenter_user: "your_vcenter_user"
+    vcenter_pass: "your_vcenter_passwd"
     datacenter_name: "DC04VC04"
     cluster_name: "DC04-VC04-Cluster14"
     ProvisioningNetworkLabel: ADMIN_DHCP_244
@@ -86,7 +86,7 @@
 #      datacenter: "{{ datacenter_name }}"
 #      vm_id: "{{ vm_name }}"
 #      vm_username: opsadmin
-#      vm_password: Platf0rm20!6
+#      vm_password: your_vm_passwd
 #      vm_shell: "/usr/bin/hostnamectl"
 #      vm_shell_args: "set-hostname new_hostname > /tmp/$$.txt 2>&1"
 #    delegate_to: localhost

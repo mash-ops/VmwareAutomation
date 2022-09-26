@@ -4,8 +4,8 @@
   vars:
     vcenter_provider:
       hostname: dc04vmvc04
-      username: svc_aut_bld@sfdc
-      password: 9Ym6+b$Hd
+      username: your_vcenter_user
+      password: your_vcenter_passwd
       validate_certs: no
       datacenter: DC04VC04
       cluster: DC04-VC04-Cluster14

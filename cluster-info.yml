@@ -3,8 +3,8 @@
   - name: Gather cluster facts from given datacenter
     vmware_cluster_info:
       hostname: dc04vmvc04
-      username: svc_aut_bld@sfdc
-      password: 9Ym6+b$Hd
+      username: your_vceter_user
+      password: your_vceter_passwd
       datacenter: DC04VC04
       validate_certs: False
     delegate_to: localhost
@@ -13,8 +13,8 @@
   - name: Gather facts from datacenter about specific cluster
     vmware_cluster_facts:
       hostname: dc04vmvc04
-      username: svc_aut_bld@sfdc 
-      password: 9Ym6+b$Hd
+      username: your_vceter_user
+      password: your_vceter_passwd
       cluster_name: DC04-VC04-Cluster14
       validate_certs: False
     delegate_to: localhost

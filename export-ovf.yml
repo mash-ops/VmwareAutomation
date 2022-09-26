@@ -8,8 +8,8 @@
   gather_facts: no
   vars:
     vcenter_hostname: "dc04vmvc04"
-    vcenter_username: "svc_aut_bld@sfdc"
-    vcenter_password: "9Ym6+b$Hd"
+    vcenter_username: "your_vcenter_user"
+    vcenter_password: "your_vcenter_passwd"
     datacenter_name: "DC04VC04"
     vm_name: "manjesh-2008r2"
   tasks:
